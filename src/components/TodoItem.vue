@@ -1,13 +1,13 @@
 <template>
   <div class="todoItem field has-addons">
     <div class="control">
-      <button class="button is-primary done-button" @click="toggleDone">
+      <button class="button is-link done-button" :class="{'is-active': curValue.isDone}" @click="toggleDone">
         <i v-if="curValue.isDone" class="fa fa-check-square-o"></i>
         <i v-else class="fa fa-square-o"></i>
       </button>
     </div>
-    <div class="control">
-      <input class="input todo-text is-primary" :class="{ 'has-text-grey-light':curValue.isDone}" type="text" placeholder="Entrée" v-model="curValue.text">
+    <div class="control is-expanded">
+      <input class="input todo-text is-link" :class="{ 'has-text-grey':curValue.isDone, 'is-italic':curValue.isDone}" type="text" placeholder="Entrée" v-model="curValue.text">
     </div>
   </div>
 </template>

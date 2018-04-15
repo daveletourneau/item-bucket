@@ -3,22 +3,24 @@
     <h1 class="title">Item-bucket</h1>
     <h2 class="subtitle">Outil simple de gestion de tâches</h2>
     <hr>
-    <todo-list />
+    <todo-list v-model="testTodo" title="Ma liste" />
   </div>
 </template>
 
 <script>
 import TodoList from '@/components/TodoList'
-import TodoItem from '@/components/TodoItem'
 
 export default {
   name: 'MainPage',
   components: {
-    TodoList, TodoItem
+    TodoList
   },
   data () {
     return {
-      testTodo: {}
+      testTodo: {
+        title: 'MonTest',
+        todos: []
+      }
     }
   },
   computed: {
