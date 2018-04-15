@@ -1,13 +1,13 @@
 <template>
   <div class="todoItem field has-addons">
     <div class="control">
-      <button class="button is-primary" :class="{'is-active': curValue.done}" @click="toggleDone">
-        <i :class="[done === true ? 'far fa-check-square' : 'far fa-square']"></i>
+      <button class="button is-primary done-button" @click="toggleDone">
+        <i v-if="curValue.isDone" class="fa fa-check-square-o"></i>
+        <i v-else class="fa fa-square-o"></i>
       </button>
     </div>
-
     <div class="control">
-      <input class="input" type="text" placeholder="Entrée" v-model="curValue.text" @input="change">
+      <input class="input todo-text is-primary" :class="{ 'has-text-grey-light':curValue.isDone}" type="text" placeholder="Entrée" v-model="curValue.text">
     </div>
   </div>
 </template>
@@ -19,30 +19,25 @@ export default {
     return {
       curValue: {
         text: '',
-        done: false
+        isDone: false
       }
     }
   },
-  computed: {
-    done () {
-      // eslint-disable-next-line
-      console.log(`Dans 'computed': ${this.curValue.done}`)
-      return this.curValue.done
-    }
-  },
   props: {
-    value: { text: '', done: false }
+    value: {
+      type: Object,
+      default () {
+        return { text: '', isDone: false }
+      }
+    }
   },
   methods: {
     toggleDone () {
-      this.curValue.done = !this.curValue.done
-      this.change()
+      this.curValue.isDone = !this.curValue.isDone
+      this.emit()
     },
-    change () {
-      this.stateIcon = this.curValue.done ? 'fa-check-square' : 'fa-square'
+    emit () {
       this.$emit('input', this.curValue)
-      // eslint-disable-next-line
-      console.log(this.curValue)
     }
   },
   created () {
@@ -51,6 +46,18 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.done-button i {
+  width: 15px;
+}
+
+.done-button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.todo-text {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
 </style>
