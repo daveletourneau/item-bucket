@@ -1,62 +1,71 @@
 <template>
-  <div class="todoList">
+  <div class="todoList hero is-light">
 
-    <h1 class="title is-5">{{ title }}</h1>
+    <div class="hero-body">
+      <h1 class="title is-4"><span>{{ curValue.title }}</span>
 
-    <!-- Actions -->
-    <!-- <div class="buttons has-addons">
-      <button class="button is-default" @click="toggleDone">
+        <!-- Actions -->
+        <div class="actions is-pulled-right">
+          <div class="buttons has-addons">
+            <button class="button is-default is-small" @click="toggleDone">
+              <span class="icon is-small">
+                <i class="fa fa-eye-slash"></i>
+              </span>
+              <span>Masquer terminés</span>
+            </button>
+            <button class="button is-default is-small" @click="emptyList" :disabled="curValue.todos.length===0">
+              <span class="icon is-small">
+                <i class="fa fa-trash"></i>
+              </span>
+              <span>Vider</span>
+            </button>
+            <button class="button is-danger is-small">
+              <span class="icon is-small">
+                <i class="fa fa-times"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </h1>
+
+      <!-- Add item input -->
+      <div class="field has-addons">
+        <p class="control">
+          <button class="button is-primary done-button">
+            <i class="fa fa-plus"></i>
+          </button>
+        </p>
+        <p class="control is-expanded">
+          <input
+            class="input is-primary"
+            type="text"
+            placeholder="Ajouter un item..."
+            v-model.trim="newTodoText"
+            @keyup.enter="addTodo">
+        </p>
+        <p class="control">
+          <button
+            class="button is-primary"
+            :disabled="!newTodoText"
+            @click="addTodo">Ajouter</button>
+        </p>
+      </div>
+
+      <!-- List -->
+      <ul v-if="curValue.todos.length">
+        <li class="item" v-for="(todo, index) in curValue.todos" :key="index">
+          <todo-item v-model="curValue.todos[index]" @input="sortList"/>
+        </li>
+      </ul>
+
+      <!-- Empty list -->
+      <div v-else class="notification is-white">
         <span class="icon is-small">
-          <i class="fa fa-eye-slash"></i>
+          <i class="fa fa-info-circle"></i>
         </span>
-        <span>Masquer les items terminés</span>
-      </button>
-      <button class="button is-danger" @click="emptyList" :disabled="curValue.todos.length===0">
-        <span class="icon is-small">
-          <i class="fa fa-trash"></i>
-        </span>
-        <span>Tout effacer</span>
-      </button>
-    </div> -->
-
-    <!-- Add item input -->
-    <div class="field has-addons">
-      <p class="control">
-        <button class="button is-primary is-outlined is-static done-button">
-          <i class="fa fa-plus"></i>
-        </button>
-      </p>
-      <p class="control is-expanded">
-        <input
-          class="input is-primary"
-          type="text"
-          placeholder="Ajouter un item..."
-          v-model.trim="newTodoText"
-          @keyup.enter="addTodo">
-      </p>
-      <p class="control">
-        <button
-          class="button is-primary"
-          :disabled="!addButtonEnabled"
-          @click="addTodo">Ajouter</button>
-      </p>
+        <span>Cette liste est vide...</span>
+      </div>
     </div>
-
-    <!-- List -->
-    <ul v-if="curValue.todos.length">
-      <li class="item" v-for="(todo, index) in curValue.todos" :key="index">
-        <todo-item v-model="curValue.todos[index]" @input="sortList"/>
-      </li>
-    </ul>
-
-    <!-- Empty list -->
-    <div v-else class="notification is-info">
-      <span class="icon is-small">
-        <i class="fa fa-info-circle"></i>
-      </span>
-      <span>Cette liste est vide...</span>
-    </div>
-
   </div>
 </template>
 
@@ -78,34 +87,24 @@ export default {
       addButtonEnabled: false
     }
   },
+  computed: {
+
+  },
   props: {
     value: {
       type: Object,
       default () {
-        return { title: '', todos: [] }
-      }
-    },
-    title: {
-      type: String,
-      default () {
-        return 'Nouvelle liste'
-      }
-    }
-  },
-  watch: {
-    newTodoText (val) {
-      if (val.length > 0) {
-        this.addButtonEnabled = true
-      } else {
-        this.addButtonEnabled = null
+        return { title: 'Nouvelle liste', todos: [] }
       }
     }
   },
   methods: {
     addTodo () {
-      this.curValue.todos.push({ text: this.newTodoText, isDone: false })
-      this.$emit('input', this.curValue)
-      this.newTodoText = ''
+      if (this.newTodoText !== '') {
+        this.curValue.todos.push({ text: this.newTodoText, isDone: false })
+        this.$emit('input', this.curValue)
+        this.newTodoText = ''
+      }
     },
     emptyList () {
       this.curValue.todos.splice(0)
@@ -119,9 +118,6 @@ export default {
   },
   created () {
     this.curValue = this.value
-    // if (this.title !== 'Nouvelle liste') {
-    //   this.curValue.title = this.title
-    // }
   }
 }
 </script>

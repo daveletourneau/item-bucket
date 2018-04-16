@@ -10,6 +10,9 @@ const state = {
 const getters = {
   sortedTodoLists: (state) => {
     return state.todoLists
+  },
+  todoListByIndex: (state) => (index) => {
+    return state.todoLists[index]
   }
 }
 
@@ -18,6 +21,7 @@ const mutations = {
     state.todoLists.push(newList)
   }
 }
+
 const actions = {}
 
 export default new Vuex.Store({

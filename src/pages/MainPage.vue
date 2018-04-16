@@ -6,7 +6,7 @@
 
     <div class="field has-addons">
       <p class="control">
-        <button class="button is-primary is-outlined is-static done-button">
+        <button class="button is-primary  done-button">
           <i class="fa fa-list"></i>
         </button>
       </p>
@@ -21,7 +21,8 @@
       <p class="control">
         <button
           class="button is-primary"
-          @click="createList">Créer</button>
+          @click="createList"
+          :disabled="!newListTitle">Créer</button>
       </p>
     </div>
 
@@ -31,13 +32,16 @@
     <div v-if="todoLists.length>0">
       <div v-for="(todoList, index) in todoLists" :key="index">
         <todo-list v-model="sortedTodoLists[index]" />
-        <hr>
+        <br>
       </div>
     </div>
 
     <!-- No lists to display -->
-    <div v-else>
-      Pas de listes à afficher
+    <div v-else class="notification is-default">
+      <span class="icon is-small">
+        <i class="fa fa-info-circle"></i>
+      </span>
+      <span>Aucune liste à afficher</span>
     </div>
 
   </div>
@@ -70,8 +74,10 @@ export default {
   },
   methods: {
     createList () {
-      this.$store.commit('newList', { title: this.newListTitle, todos: [] })
-      this.newListTitle = ''
+      if (this.newListTitle !== '') {
+        this.$store.commit('newList', { title: this.newListTitle, todos: [] })
+        this.newListTitle = ''
+      }
     },
     ...mapMutations([
       'newList'
