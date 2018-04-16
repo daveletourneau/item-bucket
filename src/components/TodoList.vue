@@ -4,22 +4,20 @@
     <h1 class="title is-5">{{ title }}</h1>
 
     <!-- Actions -->
-    <div class="buttons has-addons">
+    <!-- <div class="buttons has-addons">
       <button class="button is-default" @click="toggleDone">
         <span class="icon is-small">
           <i class="fa fa-eye-slash"></i>
         </span>
         <span>Masquer les items terminés</span>
       </button>
-      <button class="button is-danger" @click="emptyList">
+      <button class="button is-danger" @click="emptyList" :disabled="curValue.todos.length===0">
         <span class="icon is-small">
           <i class="fa fa-trash"></i>
         </span>
         <span>Tout effacer</span>
       </button>
-    </div>
-
-    <hr>
+    </div> -->
 
     <!-- Add item input -->
     <div class="field has-addons">
@@ -121,9 +119,9 @@ export default {
   },
   created () {
     this.curValue = this.value
-    if (this.title !== 'Nouvelle liste') {
-      this.curValue.title = this.title
-    }
+    // if (this.title !== 'Nouvelle liste') {
+    //   this.curValue.title = this.title
+    // }
   }
 }
 </script>
