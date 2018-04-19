@@ -9,9 +9,9 @@ const state = {
 
 const getters = {
   sortedTodoLists: (state) => {
-    return state.todoLists
+    return state.todoLists.sort((a, b) => a.title.localeCompare(b.title))
   },
-  todoListByIndex: (state) => (index) => {
+  todoListById: (state) => (index) => {
     return state.todoLists[index]
   }
 }
@@ -19,7 +19,13 @@ const getters = {
 const mutations = {
   newList (state, newList) {
     state.todoLists.push(newList)
+  },
+  deleteListById (state, id) {
+    state.todoLists.splice(state.todoLists.findIndex(function (todoList, index) {
+      return todoList.id === id
+    }), 1)
   }
+
 }
 
 const actions = {}

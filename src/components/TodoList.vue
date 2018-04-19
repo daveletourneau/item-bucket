@@ -7,19 +7,19 @@
         <!-- Actions -->
         <div class="actions is-pulled-right">
           <div class="buttons has-addons">
-            <button class="button is-default is-small" @click="toggleDone">
+            <!-- <button class="button is-default is-small" @click="toggleDone">
               <span class="icon is-small">
                 <i class="fa fa-eye-slash"></i>
               </span>
               <span>Masquer terminés</span>
-            </button>
+            </button> -->
             <button class="button is-default is-small" @click="emptyList" :disabled="curValue.todos.length===0">
               <span class="icon is-small">
                 <i class="fa fa-trash"></i>
               </span>
               <span>Vider</span>
             </button>
-            <button class="button is-danger is-small">
+            <button class="button is-danger is-small" @click="deleteSelf">
               <span class="icon is-small">
                 <i class="fa fa-times"></i>
               </span>
@@ -71,6 +71,7 @@
 
 <script>
 import TodoItem from '@/components/TodoItem'
+import uuid from 'uuid/v4'
 
 export default {
   name: 'TodoList',
@@ -80,6 +81,7 @@ export default {
   data () {
     return {
       curValue: {
+        id: '',
         title: '',
         todos: []
       },
@@ -88,13 +90,12 @@ export default {
     }
   },
   computed: {
-
   },
   props: {
     value: {
       type: Object,
       default () {
-        return { title: 'Nouvelle liste', todos: [] }
+        return { id: '', title: 'Nouvelle liste', todos: [] }
       }
     }
   },
@@ -109,15 +110,20 @@ export default {
     emptyList () {
       this.curValue.todos.splice(0)
     },
+    deleteSelf () {
+      this.$emit('delete', this.curValue.id)
+    },
     toggleDone () {
       // À venir...
     },
     sortList () {
       // À venir...
     }
+
   },
   created () {
     this.curValue = this.value
+    this.curValue.id = uuid()
   }
 }
 </script>

@@ -30,8 +30,8 @@
 
     <!-- Todo Lists -->
     <div v-if="todoLists.length>0">
-      <div v-for="(todoList, index) in todoLists" :key="index">
-        <todo-list v-model="sortedTodoLists[index]" />
+      <div v-for="(todoList, index) in sortedTodoLists" :key="todoList.id">
+        <todo-list v-model="sortedTodoLists[index]" @delete="deleteListById(todoList.id)" />
         <br>
       </div>
     </div>
@@ -80,7 +80,8 @@ export default {
       }
     },
     ...mapMutations([
-      'newList'
+      'newList',
+      'deleteListById'
     ])
   },
   created () {
