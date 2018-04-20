@@ -6,13 +6,13 @@
 
     <div class="field has-addons">
       <p class="control">
-        <button class="button is-primary  done-button">
+        <button class="button is-default  done-button">
           <i class="fa fa-list"></i>
         </button>
       </p>
       <p class="control is-expanded">
         <input
-          class="input is-primary"
+          class="input is-default"
           type="text"
           placeholder="Nouvelle liste..."
           v-model.trim="newListTitle"
@@ -20,7 +20,7 @@
       </p>
       <p class="control">
         <button
-          class="button is-primary"
+          class="button is-default"
           @click="createList"
           :disabled="!newListTitle">Créer</button>
       </p>

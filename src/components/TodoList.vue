@@ -1,18 +1,23 @@
 <template>
   <div class="todoList hero is-light">
 
-    <div class="hero-body">
-      <h1 class="title is-4"><span>{{ curValue.title }}</span>
+    <div class="panel">
+      <div class="panel-heading"><span class="has-text-weight-semibold">{{ curValue.title }}</span>
 
-        <!-- Actions -->
-        <div class="actions is-pulled-right">
+        <div class="is-pulled-right">
+          <!-- Actions -->
           <div class="buttons has-addons">
-            <!-- <button class="button is-default is-small" @click="toggleDone">
+            <button class="button is-default is-small" @click="toggleDone" :disabled="!doneTodos.length">
               <span class="icon is-small">
-                <i class="fa fa-eye-slash"></i>
+                <i
+                  class="fa"
+                  :class="{ 'fa-eye-slash':showDoneTodos,
+                            'fa-eye':!showDoneTodos}">
+                </i>
               </span>
-              <span>Masquer terminés</span>
-            </button> -->
+              <span v-if="showDoneTodos">Masquer terminés</span>
+              <span v-else>Afficher terminés</span>
+            </button>
             <button class="button is-default is-small" @click="emptyList" :disabled="curValue.todos.length===0">
               <span class="icon is-small">
                 <i class="fa fa-trash"></i>
@@ -26,41 +31,56 @@
             </button>
           </div>
         </div>
-      </h1>
-
-      <!-- Add item input -->
-      <div class="field has-addons">
-        <p class="control">
-          <button class="button is-primary done-button">
-            <i class="fa fa-plus"></i>
-          </button>
-        </p>
-        <p class="control is-expanded">
-          <input
-            class="input is-primary"
-            type="text"
-            placeholder="Ajouter un item..."
-            v-model.trim="newTodoText"
-            @keyup.enter="addTodo">
-        </p>
-        <p class="control">
-          <button
-            class="button is-primary"
-            :disabled="!newTodoText"
-            @click="addTodo">Ajouter</button>
-        </p>
       </div>
 
-      <!-- List -->
-      <ul v-if="curValue.todos.length">
-        <li class="item" v-for="(todo, index) in curValue.todos" :key="index">
-          <todo-item v-model="curValue.todos[index]" @input="sortList"/>
-        </li>
-      </ul>
+      <div class="panel-block">
+        <!-- Add item input -->
+        <div class="new-todo-input field has-addons">
+          <p class="control">
+            <button class="button is-default done-button">
+              <i class="fa fa-plus"></i>
+            </button>
+          </p>
+          <p class="control is-expanded">
+            <input
+              class="input is-default"
+              type="text"
+              placeholder="Ajouter un item..."
+              v-model.trim="newTodoText"
+              @keyup.enter="addTodo">
+          </p>
+          <p class="control">
+            <button
+              class="button is-default"
+              :disabled="!newTodoText"
+              @click="addTodo">Ajouter</button>
+          </p>
+        </div>
+      </div>
+
+      <div v-if="curValue.todos.length">
+        <!-- List - Pending todos-->
+        <div class="panel-block">
+          <ul style="width:100%;">
+            <li class="todo-item" v-for="(todo, index) in pendingTodos" :key="index">
+              <todo-item v-model="pendingTodos[index]" @input="sortList"/>
+            </li>
+          </ul>
+        </div>
+
+        <!-- List - Done todos-->
+        <div v-if="showDoneTodos && doneTodos.length" class="panel-block">
+          <ul style="width:100%;">
+            <li class="todo-item" v-for="(todo, index) in doneTodos" :key="index">
+              <todo-item v-model="doneTodos[index]" @input="sortList"/>
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <!-- Empty list -->
-      <div v-else class="notification is-white">
-        <span class="icon is-small">
+      <div v-else class="panel-block">
+        <span class="panel-icon is-small">
           <i class="fa fa-info-circle"></i>
         </span>
         <span>Cette liste est vide...</span>
@@ -86,10 +106,17 @@ export default {
         todos: []
       },
       newTodoText: '',
-      addButtonEnabled: false
+      addButtonEnabled: false,
+      showDoneTodos: true
     }
   },
   computed: {
+    doneTodos () {
+      return this.curValue.todos.filter(todo => todo.isDone === true)
+    },
+    pendingTodos () {
+      return this.curValue.todos.filter(todo => todo.isDone === false)
+    }
   },
   props: {
     value: {
@@ -114,7 +141,7 @@ export default {
       this.$emit('delete', this.curValue.id)
     },
     toggleDone () {
-      // À venir...
+      this.showDoneTodos = !this.showDoneTodos
     },
     sortList () {
       // À venir...
@@ -131,6 +158,14 @@ export default {
 <style lang="scss">
 .done-button i {
   width: 15px;
+}
+
+.new-todo-input {
+  width: 100%;
+}
+
+.todo-item {
+  width: 100%;
 }
 
 .item:not(:last-child) {
